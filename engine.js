@@ -15,6 +15,7 @@ function getAuthorizationHeader() {
     return { Authorization: Authorization, 'X-Date': GMTString }
 }
 
+// *****目前僅支援輸入數字公車路線******
 //建立要尋找的路線資訊，以便後續Alert Sequence的查找
 //route -> 路線名稱
 //direction -> 0/去程 1/回程
