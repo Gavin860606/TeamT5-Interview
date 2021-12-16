@@ -1,22 +1,36 @@
-// import express from 'express'
-// import cors from 'cors'
-// import APILoader from './lib/restful/apiLoader.js'
-// import errorHandler from './lib/restful/errorHandler.js'
+import { WebSocketServer } from 'ws'
+import emmiter from './lib/eventEmitter.js'
+import * as engine from './engine.js'
 
-// const app = express()
 
-// app.use(cors())
-// app.use(express.json()) // to support JS7ON-encoded bodies
-// app.use(
-//     express.urlencoded({
-//         // to support URL-encoded bodies
-//         extended: true,
-//     })
-// )
+//Websocket Server Initialize
+const wss = new WebSocketServer({ port: 8090 })
+console.log('Start WebSocket Server on ws://localhost:8090\n')
+let wsClient = []
 
-// APILoader(app)
+//WebSocket Client Connection 
+wss.on('connection', (ws) => {
+    //連結時執行此 console 提示
+    console.log('Received Client Connection')
+    //Push Socket Instance into my wsClient
+    wsClient.push(ws)
+    //當 WebSocket 的連線關閉時執行
+    ws.on('close', () => {
+        console.log('Close connected')
+    })
+})
 
-// app.use(errorHandler)
-// app.listen(8080, () => {
-//     console.log('Junyi API Server Running on port 8080')
-// })
+
+//When receive eventEmitter , send event to clients
+emmiter.on('Bingo', function (data) {
+    wsClient.forEach((ws) => {
+        ws.send(data)
+    })
+})
+
+//Main function
+const Route = await engine.getRouteStop('672', 1)
+engine.alert(Route, '三張犁')
+setInterval(() => {
+    engine.alert(Route, '三張犁')
+}, 10 * 1000)
