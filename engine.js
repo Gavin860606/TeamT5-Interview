@@ -46,7 +46,7 @@ function alert(routeStopInfo, busStop) {
     let stopSequence = null
     routeStopInfo.Stops.forEach((stop) => {
         if (stop.StopName.Zh_tw === busStop) {
-            console.log('尋找站牌:' + busStop + ' sequence:', stop.StopSequence +' 將於抵達前 3 ~ 5 站發出通知 \n')
+            console.log('尋找站牌:' + busStop + ' sequence:', stop.StopSequence + ' 將於抵達前 3 ~ 5 站發出通知 \n')
             stopSequence = stop.StopSequence
         }
     })
@@ -55,9 +55,12 @@ function alert(routeStopInfo, busStop) {
 
     try {
         axios
-            .get('https://ptx.transportdata.tw/MOTC/v2/Bus/RealTimeNearStop/City/Taipei/672?%24filter=Direction%20eq%201&%24top=30&%24format=JSON', {
-                headers: getAuthorizationHeader(),
-            })
+            .get(
+                `https://ptx.transportdata.tw/MOTC/v2/Bus/RealTimeNearStop/City/Taipei/${routeStopInfo.RouteName.Zh_tw}?%24filter=Direction%20eq%201&%24top=30&%24format=JSON`,
+                {
+                    headers: getAuthorizationHeader(),
+                }
+            )
             .then((response) => {
                 const data = response.data
                 console.log(`公車路線: ${data[0].RouteName.Zh_tw}，值勤中共 ${data.length} 輛`)
